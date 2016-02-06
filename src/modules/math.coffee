@@ -7,9 +7,17 @@ module.exports = require('../builder').build
 
     res = ''
     parser = math.parser()
-    for line in str.split '\n'
-      t = parser.eval line
-      res += t + '\n' if t isnt ''
+
+    try
+      for line in str.split '\n'
+        t = parser.eval line
+        res += t + '\n' if t isnt ''
+    catch error
+      @telegram.sendMessage
+        chat_id: msg.chat.id
+        text: error.message
+        reply_to_message_id: msg.message_id
+      return
 
     @telegram.sendMessage
       chat_id: msg.chat.id
