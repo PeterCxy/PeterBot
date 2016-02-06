@@ -3,6 +3,7 @@ config = require '../config.json'
 {check} = require './utility'
 
 commands = {}
+generics = []
 
 exports.init = ->
   tele = new Telegram
@@ -15,8 +16,13 @@ exports.init = ->
 
     for k of Module.prototype
       continue if k is 'help'
-      console.log "Command /#{k} has a implementation in #{m}"
-      commands[k] = instance
+
+      if k isnt 'generic'
+        console.log "Command /#{k} has a implementation in #{m}"
+        commands[k] = instance
+      else
+        console.log "Registered generic message processor from #{m}"
+        generics.push instance
 
   Help = require("./help")(commands)
   commands['help'] = new Help tele
@@ -48,5 +54,10 @@ runForever = (tele) ->
               commands[cmd][cmd](u.message, list[1...]...)
             catch error
               console.warn error
+        else
+          # Not a command?
+          # Distribute to generic processora
+          for p in generics
+            p.generic u.message
       do run
   do run
