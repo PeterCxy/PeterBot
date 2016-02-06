@@ -21,5 +21,6 @@ Get help for [command]
         chat_id: msg.chat.id
         text: str
         reply_to_message_id: msg.message_id
+        parse_mode: 'markdown'
       .on 'complete', check (res) ->
         console.log "Help sent with #{cmd}" if res?
