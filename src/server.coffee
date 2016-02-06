@@ -43,6 +43,9 @@ runForever = (tele) ->
             continue if name isnt tele.getName()
 
           if commands[cmd]?
-            commands[cmd][cmd](u.message, list[1...]...)
+            try
+              commands[cmd][cmd](u.message, list[1...]...)
+            catch error
+              console.warn error
       do run
   do run
