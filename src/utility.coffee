@@ -8,4 +8,6 @@ exports.check = (callback) ->
 exports.args = (argument) ->
   Array::slice.call argument
 
+# Strings
 String::contains = (str) -> this.indexOf(str) >= 0
+String::repeat = (n) -> Array(n + 1).join this
