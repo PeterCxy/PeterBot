@@ -20,6 +20,7 @@ exports.init = ->
 
   Help = require("./help")(commands)
   commands['help'] = new Help tele
+  commands['father'] = commands['help']
 
   tele.getMe().on 'complete', check (res) ->
     console.log "I am #{res.username}"

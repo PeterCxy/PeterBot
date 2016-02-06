@@ -24,3 +24,13 @@ Get help for [command]
         parse_mode: 'markdown'
       .on 'complete', check (res) ->
         console.log "Help sent with #{cmd}" if res?
+
+    # Generate command list for the BotFather
+    father: (msg) ->
+      str = ''
+      for k, v of commands
+        continue if k is 'father'
+        str += "/#{k} - Send `/help@#{@telegram.getName()}` #{k} for help\n"
+      @telegram.sendMessage
+        chat_id: msg.chat.id
+        text: str
