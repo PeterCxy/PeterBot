@@ -29,7 +29,7 @@ module.exports = require('../builder').build
   help:
     calc: '''
 /calc expression
-Calulate one or multiple **math.js** expressions.
+Calulate one or multiple __math.js__ expressions.
 Split multiple expressions in one line with ';'.
 Note that expressions ending with ';' will not produce any outout.
 e.g.
