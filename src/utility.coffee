@@ -7,3 +7,5 @@ exports.check = (callback) ->
 # Convert arguments to Array
 exports.args = (argument) ->
   Array::slice.call argument
+
+String::contains = (str) -> this.indexOf(str) >= 0
