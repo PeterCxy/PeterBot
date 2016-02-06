@@ -1,4 +1,4 @@
-{check, args} = require '../utility'
+{check} = require '../utility'
 
 module.exports = require('../builder').build
   hello: (msg) ->
@@ -7,8 +7,8 @@ module.exports = require('../builder').build
       text: "Hello, @#{msg.from.username}"
     .on 'complete', check ->
       console.log "Hello message sent to @#{msg.from.username}"
-  echo: (msg) ->
-    str = args(arguments)[1...].join ' '
+  echo: (msg, args...) ->
+    str = args.join ' '
     @telegram.sendMessage
       chat_id: msg.chat.id
       text: str

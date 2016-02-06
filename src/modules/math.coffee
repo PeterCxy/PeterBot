@@ -1,9 +1,9 @@
 math = require 'mathjs'
-{check, args} = require '../utility'
+{check} = require '../utility'
 
 module.exports = require('../builder').build
-  calc: (msg) ->
-    str = args(arguments)[1...].join ' '
+  calc: (msg, args...) ->
+    str = args.join ' '
 
     res = ''
     parser = math.parser()
