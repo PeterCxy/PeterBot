@@ -22,8 +22,10 @@ Get help for [command]
         text: str
         reply_to_message_id: msg.message_id
         parse_mode: 'markdown'
-      .on 'complete', check (res) ->
-        console.log "Help sent with #{cmd}" if res?
+      .subscribe null, (err) ->
+        console.warn err
+      , ->
+        console.log "Help sent with #{cmd}"
 
     # Generate command list for the BotFather
     father: (msg) ->
@@ -34,3 +36,5 @@ Get help for [command]
       @telegram.sendMessage
         chat_id: msg.chat.id
         text: str
+      .subscribe null, (err) ->
+        console.warn err

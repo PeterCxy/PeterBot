@@ -1,5 +1,3 @@
-{check} = require '../utility'
-
 module.exports = require('../builder').build
   generic: (msg) ->
     for gun in guns
@@ -9,7 +7,7 @@ module.exports = require('../builder').build
           chat_id: msg.chat.id
           text: gun.act cond, msg
           reply_to_message_id: msg.message_id
-        .on 'complete', check ->
+        .subscribe null, null, ->
           console.log "Gun activated to #{msg.from.username}"
         break
 

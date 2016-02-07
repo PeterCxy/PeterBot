@@ -23,8 +23,8 @@ module.exports = require('../builder').build
       chat_id: msg.chat.id
       text: res
       reply_to_message_id: msg.message_id
-    .on 'complete', check ->
-      console.log "Evaluated #{str}"
+    .subscribe null, (err) ->
+      console.warn err
 
   help:
     calc: '''
