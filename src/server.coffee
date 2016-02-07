@@ -1,7 +1,7 @@
 Telegram = require './telegram'
 Rx = require 'rxjs/Rx'
 config = require '../config.json'
-{check} = require './utility'
+{protoKeys} = require './utility'
 
 commands = {}
 generics = []
@@ -9,36 +9,38 @@ generics = []
 exports.init = ->
   tele = new Telegram
 
-  for m in config.modules
-    console.log "Loading module #{m} ..."
-    Module = require "./modules/#{m}"
-
-    instance = new Module tele
-
-    for k of Module.prototype
-      continue if k is 'help'
-
-      if k isnt 'generic'
-        console.log "Command /#{k} has a implementation in #{m}"
-        commands[k] = instance
+  Rx.Observable.from config.modules
+    .map (m) ->
+      console.log "Loading module #{m}"
+      Module = require "./modules/#{m}"
+      [Module, new Module tele]
+    .flatMap (a) ->
+      [keys, len] = protoKeys a[0].prototype
+      o = Rx.Observable.of(a[1]).repeat len
+      keys.zip o, (x, y) -> [x, y]
+    .filter (m) -> m[0] isnt 'help'
+    .subscribe (m) ->
+      if m[0] isnt 'generic'
+        console.log "Registering command /#{m[0]}"
+        commands[m[0]] = m[1]
       else
-        console.log "Registered generic message processor from #{m}"
-        generics.push instance
+        console.log "Registering generic"
+        generics.push m[1]
+    , null, ->
+      Help = require("./help")(commands)
+      commands['help'] = new Help tele
+      commands['father'] = commands['help']
 
-  Help = require("./help")(commands)
-  commands['help'] = new Help tele
-  commands['father'] = commands['help']
-
-  tele.getMe()
-    .map (res) -> res.username
-    .subscribe (name) ->
-      console.log "I am #{name}"
-      tele.name = name
-    , (err) ->
-      throw err
-    , ->
-      # Enter the main loop
-      runForever tele
+      tele.getMe()
+        .map (res) -> res.username
+        .subscribe (name) ->
+          console.log "I am #{name}"
+          tele.name = name
+        , (err) ->
+          throw err
+        , ->
+          # Enter the main loop
+          runForever tele
 
 runForever = (tele) ->
   offset = 0

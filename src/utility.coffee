@@ -1,3 +1,5 @@
+Rx = require 'rxjs/Rx'
+
 exports.check = (callback) ->
   (res) ->
     console.warn res if res instanceof Error
@@ -11,3 +13,10 @@ exports.args = (argument) ->
 # Strings
 String::contains = (str) -> this.indexOf(str) >= 0
 String::repeat = (n) -> Array(n + 1).join this
+
+# Rx utils
+exports.protoKeys = (type) ->
+  keys = Object.getOwnPropertyNames type
+  o = Rx.Observable.from keys
+    .filter (k) -> k isnt 'constructor'
+  [o, keys.length]
