@@ -34,9 +34,11 @@ exports.init = ->
     .subscribe (name) ->
       console.log "I am #{name}"
       tele.name = name
-      runForever tele
     , (err) ->
       throw err
+    , ->
+      # Enter the main loop
+      runForever tele
 
 runForever = (tele) ->
   offset = 0
