@@ -1,7 +1,7 @@
 Telegram = require './telegram'
 Rx = require 'rxjs/Rx'
 config = require '../config.json'
-{protoKeys} = require './utility'
+{protoKeys, parse} = require './utility'
 
 commands = {}
 generics = []
@@ -62,7 +62,7 @@ runForever = (tele) ->
 
         if commands[cmd]?
           try
-            commands[cmd][cmd](u.message, list[1...]...)
+            commands[cmd][cmd](u.message, parse(list[1...])...)
           catch error
             console.warn error
       else
