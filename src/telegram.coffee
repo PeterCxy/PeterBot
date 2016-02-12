@@ -22,11 +22,23 @@ module.exports = Telegram
 observe = (o) ->
   Rx.Observable.create (observer) ->
     o.on 'complete', (res) ->
-      if !res? or (res instanceof Error)
-        observer.error res
-      else
-        if res.ok? && res.ok
-          observer.next res.result
+      loop
+        if !res? or (res instanceof Error)
+          # Prevent from crashing
+          try
+            observer.error res
+          catch e
+            console.log e
+            break
         else
-          observer.error new Error res.description
-      observer.complete()
+          if res.ok? && res.ok
+            observer.next res.result
+          else
+            try
+              observer.error new Error res.description
+            catch e
+              # Prevent from crashing
+              console.log e
+              break
+        observer.complete()
+        break
