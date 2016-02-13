@@ -1,3 +1,4 @@
+Rx = require 'rxjs/Rx'
 math = require 'mathjs'
 {check} = require '../utility'
 
@@ -8,23 +9,19 @@ module.exports = require('../builder').build
     res = ''
     parser = math.parser()
 
-    try
-      for line in str.split '\n'
-        t = parser.eval line
-        res += t + '\n' if t isnt ''
-    catch error
-      @telegram.sendMessage
-        chat_id: msg.chat.id
-        text: error.message
-        reply_to_message_id: msg.message_id
-      return
-
-    @telegram.sendMessage
-      chat_id: msg.chat.id
-      text: res
-      reply_to_message_id: msg.message_id
-    .subscribe null, (err) ->
-      console.warn err
+    Rx.Observable.from str.split '\n'
+      .map (it) -> parser.eval it
+      .filter (it) -> it isnt ''
+      .catch (err) -> Rx.Observable.of err.message
+      .toArray()
+      .map (it) -> it.join '\n'
+      .flatMap (it) =>
+        @telegram.sendMessage
+          chat_id: msg.chat.id
+          text: it
+          reply_to_message_id: msg.message_id
+      .subscribe null, (err) ->
+        console.warn err
 
   help:
     calc: '''
