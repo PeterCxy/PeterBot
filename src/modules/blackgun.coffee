@@ -1,15 +1,17 @@
+Rx = require 'rxjs/Rx'
 module.exports = require('../builder').build
   generic: (msg) ->
-    for gun in guns
-      cond = gun.cond msg
-      if cond? and cond
+    Rx.Observable.from guns
+      .map (it) -> [(it.cond msg), it.act]
+      .filter (it) -> it[0]? and it[0]
+      .take 1
+      .flatMap (it) =>
         @telegram.sendMessage
           chat_id: msg.chat.id
-          text: gun.act cond, msg
+          text: it[1](it[0], msg)
           reply_to_message_id: msg.message_id
-        .subscribe null, null, ->
-          console.log "Gun activated to #{msg.from.username}"
-        break
+      .subscribe null, null, ->
+        console.log "Gun activated to #{msg.from.username}"
 
 guns = [
     cond: (msg) -> msg.text.match /#RICH/g
