@@ -7,6 +7,12 @@ commands = {}
 generics = []
 handlers = {}
 
+Error.stackTraceLimit = Infinity
+
+process.on 'uncaughtException', (err) ->
+  # Do not crash the whole program
+  console.warn err, err.stack.split '\n'
+
 exports.init = ->
   tele = new Telegram
 
