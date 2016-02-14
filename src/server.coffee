@@ -68,6 +68,7 @@ runForever = (tele) ->
 
     o.subscribe (u) ->
       offset = u.update_id + 1
+      return if !u.message.text?
       text = u.message.text
       list = text.split ' '
       if list[0].startsWith '/'
