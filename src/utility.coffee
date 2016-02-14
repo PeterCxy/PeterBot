@@ -14,6 +14,9 @@ exports.args = args = (argument) ->
 String::contains = (str) -> this.indexOf(str) >= 0
 String::repeat = (n) -> Array(n + 1).join this
 
+# Arrays
+Array::filterLessThan = (num) -> if @length >= num then this else null
+
 # Rx utils
 exports.protoKeys = (type) ->
   keys = Object.getOwnPropertyNames type

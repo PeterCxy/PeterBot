@@ -20,9 +20,9 @@ guns = [
     cond: (msg) -> msg.text.match /#POOR/gi
     act: -> '#RICH'
   ,
-    cond: (msg) -> msg.text.match /\uD83C\uDF1A/g
+    cond: (msg) -> (msg.text.match /\uD83C\uDF1A/g)?.filterLessThan 4
     act: (cond) -> "\uD83C\uDF1D".repeat cond.length
   ,
-    cond: (msg) -> msg.text.match /\uD83C\uDF1D/g
+    cond: (msg) -> (msg.text.match /\uD83C\uDF1D/g)?.filterLessThan 4
     act: (cond) -> "\uD83C\uDF1A".repeat cond.length
 ]
