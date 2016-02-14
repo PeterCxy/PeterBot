@@ -68,7 +68,7 @@ exports.cleanup = cleanup = (msg) ->
 runForever = (tele) ->
   offset = 0
   run = ->
-    o = tele.getUpdates offset: offset
+    o = tele.getUpdates offset: offset, timeout: 600
       .flatMap (res) -> Rx.Observable.from res
 
     o.subscribe (u) ->
