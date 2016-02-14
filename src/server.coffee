@@ -10,7 +10,6 @@ handlers = {}
 Error.stackTraceLimit = Infinity
 
 process.on 'uncaughtException', (err) ->
-  # Do not crash the whole program
   console.error err, err.stack.split '\n'
 
 exports.init = ->
