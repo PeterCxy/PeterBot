@@ -14,9 +14,15 @@ module.exports = require('../builder').build
         console.log "Gun failed to activate to #{msg.from.username}: #{err}"
 
 guns = [
-    cond: (msg) -> msg.text.match /#RICH/g
+    cond: (msg) -> msg.text.match /#RICH/gi
     act: -> '#POOR'
+  ,
+    cond: (msg) -> msg.text.match /#POOR/gi
+    act: -> '#RICH'
   ,
     cond: (msg) -> msg.text.match /\uD83C\uDF1A/g
     act: (cond) -> "\uD83C\uDF1D".repeat cond.length
+  ,
+    cond: (msg) -> msg.text.match /\uD83C\uDF1D/g
+    act: (cond) -> "\uD83C\uDF1A".repeat cond.length
 ]
