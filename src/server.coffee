@@ -43,9 +43,11 @@ exports.init = ->
           # Enter the main loop
           runForever tele
 
-grab = (msg, callback) -> handlers["#{msg.chat.id}#{msg.from.id}"] = callback
+grab = (msg, callback) ->
+  release msg
+  handlers["#{msg.chat.id}#{msg.from.id}"] = callback
 grabOnce = (msg, callback) ->
-  handlers["#{msg.chat.id}#{msg.from.id}"] = (m) ->
+  grab msg, (m) ->
     release msg
     callback m
 
@@ -54,6 +56,9 @@ grabOnce = (msg, callback) ->
 exports.grab = fromCallback grab
 exports.grabOnce = fromCallback grabOnce
 exports.release = release = (msg) -> handlers["#{msg.chat.id}#{msg.from.id}"] = null
+exports.cleanup = cleanup = (msg) ->
+  handlers["#{msg.chat.id}#{msg.from.id}"] new Error 'cancelled' if handlers["#{msg.chat.id}#{msg.from.id}"]?
+  release msg
 
 runForever = (tele) ->
   offset = 0

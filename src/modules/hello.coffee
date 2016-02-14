@@ -1,6 +1,6 @@
 Rx = require 'rxjs/Rx'
 printf = require 'printf'
-{grabOnce} = require '../server'
+{grabOnce, release, cleanup} = require '../server'
 
 module.exports = require('../builder').build
   hello: (msg) ->
@@ -35,6 +35,7 @@ module.exports = require('../builder').build
           reply_to_message_id: msg.message_id
       .subscribe null, null, ->
         console.log "Formatted #{format}"
+  cancel: (msg) -> cleanup msg
   remind: (msg) ->
     parse = require 'parse-duration'
 
@@ -78,3 +79,4 @@ e.g.
   /choose %s:%d%% Lucky;Unlucky 0-100
 ```
 '''
+    cancel: '/cancel - Cancel the current operation'

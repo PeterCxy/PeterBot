@@ -25,7 +25,10 @@ exports.fromCallback = (func) ->
     a = args arguments
     Rx.Observable.create (observer) ->
       a.push ->
-        observer.next (args arguments)...
+        if arguments[0] instanceof Error
+          throw arguments[0]
+        else
+          observer.next (args arguments)...
         observer.complete()
       try
         func a...
