@@ -47,7 +47,7 @@ module.exports = require('../builder').build
     .flatMap (it) =>
       o = @telegram.sendMessage
         chat_id: msg.chat.id
-        text: "Good. Now tell me when to remind you?"
+        text: "Good. Now tell me when to remind you. Please reply in this format: AhBmCsDms. e.g. 10s, 1m20s"
         reply_to_message_id: it.message_id
       Rx.Observable.of it.text
         .zip o, (x, y) -> [x, y]
@@ -55,7 +55,16 @@ module.exports = require('../builder').build
       Rx.Observable.of it[0]
         .zip (grabOnce msg), (x, y) -> [x, y]
     .map (it) -> [it[0], parse it[1].text]
-    .catch (err) -> [err.message, 100]
+    .catch (err) -> Rx.Observable.of [err.message, 100]
+    .flatMap (it) =>
+      # Tell the user
+      o = @telegram.sendMessage
+        chat_id: msg.chat.id
+        text: "Yes, sir!"
+        reply_to_message_id: msg.message_id
+
+      Rx.Observable.of it
+        .zip o, (x, y) -> x
     .flatMap (it) ->
       Rx.Observable.of it[0]
         .delay new Date Date.now() + it[1]
@@ -80,3 +89,4 @@ e.g.
 ```
 '''
     cancel: '/cancel - Cancel the current operation'
+    remind: '/remind - Just a reminder. This is an interactive command, so just try to use it.'
