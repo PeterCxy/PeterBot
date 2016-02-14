@@ -18,7 +18,7 @@ exports.init = ->
       [keys, len] = protoKeys a[0].prototype
       o = Rx.Observable.of(a[1]).repeat len
       keys.zip o, (x, y) -> [x, y]
-    .filter (m) -> m[0] isnt 'help'
+    .filter (m) -> m[0] not in ['help', 'put', 'get']
     .subscribe (m) ->
       if m[0] isnt 'generic'
         console.log "Registering command /#{m[0]}"
