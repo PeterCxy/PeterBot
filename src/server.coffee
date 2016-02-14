@@ -1,10 +1,11 @@
 Telegram = require './telegram'
 Rx = require 'rxjs/Rx'
 config = require '../config.json'
-{protoKeys, parse} = require './utility'
+{protoKeys, parse, fromCallback} = require './utility'
 
 commands = {}
 generics = []
+handlers = {}
 
 exports.init = ->
   tele = new Telegram
@@ -42,6 +43,18 @@ exports.init = ->
           # Enter the main loop
           runForever tele
 
+grab = (msg, callback) -> handlers["#{msg.chat.id}#{msg.from.id}"] = callback
+grabOnce = (msg, callback) ->
+  handlers["#{msg.chat.id}#{msg.from.id}"] = (m) ->
+    release msg
+    callback m
+
+# Grab the input from a person in a chat to a specific handler
+# Note that while the input is grabbed, generic processors will not work.
+exports.grab = fromCallback grab
+exports.grabOnce = fromCallback grabOnce
+exports.release = release = (msg) -> handlers["#{msg.chat.id}#{msg.from.id}"] = null
+
 runForever = (tele) ->
   offset = 0
   run = ->
@@ -68,8 +81,13 @@ runForever = (tele) ->
       else
         # Not a command?
         # Distribute to generic processor
-        for p in generics
-          p.generic u.message
+        callback = handlers["#{u.message.chat.id}#{u.message.from.id}"]
+
+        if !callback?
+          for p in generics
+            p.generic u.message
+        else
+          callback u.message
     , (err) ->
       console.warn err
     , run

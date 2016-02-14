@@ -7,7 +7,7 @@ exports.check = (callback) ->
     callback res.result
 
 # Convert arguments to Array
-exports.args = (argument) ->
+exports.args = args = (argument) ->
   Array::slice.call argument
 
 # Strings
@@ -20,6 +20,17 @@ exports.protoKeys = (type) ->
   o = Rx.Observable.from keys
     .filter (k) -> k isnt 'constructor'
   [o, keys.length]
+exports.fromCallback = (func) ->
+  ->
+    a = args arguments
+    Rx.Observable.create (observer) ->
+      a.push ->
+        observer.next (args arguments)...
+        observer.complete()
+      try
+        func a...
+      catch err
+        observer.error err
 
 # Arguments parser
 exports.parse = (args) ->
