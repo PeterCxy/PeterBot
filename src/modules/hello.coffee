@@ -1,5 +1,6 @@
 Rx = require 'rxjs/Rx'
 printf = require 'printf'
+{grabOnce} = require '../server'
 
 module.exports = require('../builder').build
   hello: (msg) ->
@@ -34,6 +35,36 @@ module.exports = require('../builder').build
           reply_to_message_id: msg.message_id
       .subscribe null, null, ->
         console.log "Formatted #{format}"
+  remind: (msg) ->
+    parse = require 'parse-duration'
+
+    @telegram.sendMessage
+      chat_id: msg.chat.id
+      text: "What to remind you of?"
+      reply_to_message_id: msg.message_id
+    .flatMap (it) -> grabOnce msg
+    .flatMap (it) =>
+      o = @telegram.sendMessage
+        chat_id: msg.chat.id
+        text: "Good. Now tell me when to remind you?"
+        reply_to_message_id: it.message_id
+      Rx.Observable.of it.text
+        .zip o, (x, y) -> [x, y]
+    .flatMap (it) ->
+      Rx.Observable.of it[0]
+        .zip (grabOnce msg), (x, y) -> [x, y]
+    .map (it) -> [it[0], parse it[1].text]
+    .catch (err) -> [err.message, 100]
+    .flatMap (it) ->
+      Rx.Observable.of it[0]
+        .delay new Date Date.now() + it[1]
+    .flatMap (it) =>
+      @telegram.sendMessage
+        chat_id: msg.chat.id
+        text: "@#{msg.from.username} #{it}"
+    .subscribe null, null, ->
+      console.log "Reminded @#{msg.from.username}"
+
 
   help:
     hello: '/hello - Just send "hello"'
