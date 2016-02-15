@@ -3,6 +3,7 @@ module.exports = require('../builder').build
   generic: (msg) ->
     if /^s\/.*\/.*(\/g)?$/.test msg.text
       last = @get msg.chat.id, msg.from.id, 'last'
+      last = msg.reply_to_message.text if msg.reply_to_message?
       return if !last?
 
       sub = (msg.text + '/').split '/'
