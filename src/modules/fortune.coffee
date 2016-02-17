@@ -7,7 +7,7 @@ module.exports = require('../builder').build
     @telegram.sendMessage
       chat_id: msg.chat.id
       text: new Fortune().tell()
-      reply_to_message: msg.message_id
+      reply_to_message_id: msg.message_id
       parse_mode: 'markdown'
     .subscribe null, null, ->
       console.log "Fortune told!"
@@ -17,7 +17,7 @@ module.exports = require('../builder').build
     @telegram.sendMessage
       chat_id: msg.chat.id
       text: new Fortune().whatif args.join ' '
-      reply_to_message: msg.message_id
+      reply_to_message_id: msg.message_id
       parse_mode: 'markdown'
     .subscribe null, (err) ->
       console.log "Can't complete `whatif` because #{err}"
