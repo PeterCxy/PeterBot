@@ -11,6 +11,9 @@ module.exports = require('../builder').build
     .subscribe null, null, ->
       console.log "Fortune told!"
 
+  help:
+    today: "/today - What's your fortune today?"
+
 # Impl (http://runjs.cn/code/ydp3it7b)
 class Fortune
   constructor: ->
