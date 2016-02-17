@@ -12,7 +12,7 @@ RUN pacman -S --noconfirm nodejs npm coffee-script git
 
 # Initialize the environment
 WORKDIR /usr/src/bot
-ENV TAG=rel.9
+ENV TAG=rel.10
 RUN git clone -b ${TAG} --depth 1 https://github.com/PeterCxy/PeterBot.git . && \
   npm install
 
