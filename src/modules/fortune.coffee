@@ -1,5 +1,6 @@
 # Programmers' fortune teller!
 {format} = require 'util'
+{crc8} = require 'crc'
 
 module.exports = require('../builder').build
   today: (msg) ->
@@ -11,8 +12,19 @@ module.exports = require('../builder').build
     .subscribe null, null, ->
       console.log "Fortune told!"
 
+  whatif: (msg, args...) ->
+    return if !args? or args.length is 0
+    @telegram.sendMessage
+      chat_id: msg.chat.id
+      text: new Fortune().whatif args.join ' '
+      reply_to_message: msg.message_id
+      parse_mode: 'markdown'
+    .subscribe null, (err) ->
+      console.log "Can't complete `whatif` because #{err}"
+
   help:
     today: "/today - What's your fortune today?"
+    whatif: "/whatif something - What if you do [something] today?"
 
 # Impl (http://runjs.cn/code/ydp3it7b)
 class Fortune
@@ -22,6 +34,8 @@ class Fortune
 
   tell: ->
     format "%s\n\n%s", @todayString(), @todayFortune()
+  whatif: (koto) ->
+    @star (@random (crc8 koto) / koto.length) % 5 + 1
 
   random: (indexSeed) ->
     n = @iday % 11117
