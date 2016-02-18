@@ -1,4 +1,5 @@
 # Programmers' fortune teller!
+# This module is mostly a copy of (http://runjs.cn/code/ydp3it7b), so I do not want to convert it into Literate Coffee.
 {format} = require 'util'
 {crc8} = require 'crc'
 
