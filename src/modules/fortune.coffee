@@ -3,7 +3,10 @@
 {crc8} = require 'crc'
 
 module.exports = require('../builder').build
-  today: (msg) ->
+  today: (msg, args...) ->
+    if args? and args.length > 0
+      @whatif msg, args...
+      return
     @telegram.sendMessage
       chat_id: msg.chat.id
       text: new Fortune().tell()
