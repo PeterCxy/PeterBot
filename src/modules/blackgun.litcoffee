@@ -53,11 +53,15 @@ There is always some `#RICH` people calling themselves `#POOR` and vice-versa. S
 
 The two emojis `Full moon with face` and `New moon with face` are often used to describe luckiness and unluckiness. This is fun! So we can do something like this --
 
-        cond: (msg) -> (msg.text.match /\uD83C\uDF1A/g)?.filterLessThan 2
-        act: (cond) -> "\uD83C\uDF1D".repeat cond.length
-      ,
-        cond: (msg) -> (msg.text.match /\uD83C\uDF1D/g)?.filterLessThan 2
-        act: (cond) -> "\uD83C\uDF1A".repeat cond.length
+        cond: (msg) -> (msg.text.match /\uD83C\uDF1A|\uD83C\uDF1D/g)?.filterLessThan 2
+
+We only do this type of `blackgun` when there are more than 1 moon faces in the message text. Now we have extracted all the moon faces in the string. If any, we will repace the `full moon` with `new moon` and vice-versa as the action to do `blackgun` with the message. Note that we must employ a temporary placeholder in order to do this!
+
+        act: (cond) ->
+          cond.join ''
+              .replace /\uD83C\uDF1D/g, 'temp'
+              .replace /\uD83C\uDF1A/g, '\uD83C\uDF1D'
+              .replace /temp/g, '\uD83C\uDF1A'
 
 
 ##### The end
