@@ -48,6 +48,14 @@ There is always some `#RICH` people calling themselves `#POOR` and vice-versa. S
         act: -> '#RICH'
       ,
 
+##### NSFW?!
+
+The Chinese expression `噫` is often used to describe something `#NSFW`. So when somebody sends this tag, we can `blackgun`.
+
+        cond: (msg) -> msg.text.match /#NSFW/gi
+        act: -> '噫'
+      ,
+
 
 ##### Moons with faces
 
