@@ -119,6 +119,13 @@ Otherwise, it is just a normal arguement.
 
           else
             Rx.Observable.of i
+
+Some arguments might be empty. We filter them out - no empty arguments are allowed!
+
+        .filter (it) -> it?.trim() isnt ''
+
+Now we just wait for the operations to complete.
+
         .toArray()
         .subscribe (i) ->
           ret = i
