@@ -82,7 +82,7 @@ First, we ask the user for what to remind him/her of.
           text: "What to remind you of?"
           reply_to_message_id: msg.message_id
 
-After asking so, we should grab the next input. As we only need one input, so we only grab it once. By doing so, there's no need to manually relese the input.
+After asking so, we should grab the next input. As we only need one input, so we only grab it once. By doing so, there's no need to manually release the input. The `grabOnce` function returns also a stream waiting for the user's reply.
 
         .flatMap (it) -> grabOnce msg
 
