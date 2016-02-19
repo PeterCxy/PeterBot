@@ -152,7 +152,9 @@ Don't worry, we won't get into any overflows.
 
 Each time, we need to poll the Telegram server for available updates on the bot's received messages. We set the timeout to 10 minutes as a long-poll.
 
-        o = tele.getUpdates offset: offset, timeout: 600
+        o = tele.getUpdates
+              offset: offset
+              timeout: 600
 
 The result stream emits an array, but we do not need the array itself. So we unfold it into a stream.
 
