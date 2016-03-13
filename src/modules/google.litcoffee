@@ -57,3 +57,13 @@ We can now send the result back to the user.
 					reply_to_message_id: msg.message_id
 				.subscribe null, (err) ->
 					console.log err
+
+Help
+---
+
+		help:
+			google: '''
+	/google query
+	Google for `query`.
+	If `query` not provided, the last query will be continued.
+	'''
