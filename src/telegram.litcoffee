@@ -17,6 +17,7 @@ The `restler` module provides a helper function `service` to quickly create a RE
       getName: -> @name
       getUpdates: (options) -> observe @get '/getUpdates', data: options
       sendMessage: (options) -> observe @post '/sendMessage', data: options
+      sendChatAction: (options) -> observe @post '/sendChatAction', data: options
 
 However, in the original implementation of `restler`, the URL is resolved using `url.resolve`, which omits all the paths in the `baseURL` and keeps only the host name. This won't work for us, as Telegram API's token is specified in the URL. We must replace the method `_url` which resolves the url and replace it. We just append the method path to the base url.
 
