@@ -12,7 +12,8 @@ and point the `googler` field in `config.json` to it.
 Google
 ---
 
-      google: (msg, query) ->
+      google: (msg, args...) ->
+        query = args?.join ' '
 
 When called with no arguments, we try to continue the last query.
 
