@@ -51,10 +51,14 @@ There is always a trailing line. We just replace it with nothing.
 
 We can now send the result back to the user.
 
-				@telegram.sendMessage
+				@telegram.sendChatAction
 					chat_id: msg.chat.id
-					text: res
-					reply_to_message_id: msg.message_id
+					action: 'typing'
+				.flatMap (it) =>
+					@telegram.sendMessage
+						chat_id: msg.chat.id
+						text: res
+						reply_to_message_id: msg.message_id
 				.subscribe null, (err) ->
 					console.log err
 
