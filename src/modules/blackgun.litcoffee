@@ -42,7 +42,7 @@ The following code defines a set of conditions and the corresponding action to `
 There is always some `#RICH` people calling themselves `#POOR` and vice-versa. So --
 
         cond: (msg) -> msg.text.match /#RICH/gi
-        act: -> '#POOR'
+        act: -> '穷。'
       ,
         cond: (msg) -> msg.text.match /#POOR/gi
         act: -> '#RICH'
