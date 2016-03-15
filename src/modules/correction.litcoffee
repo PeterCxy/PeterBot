@@ -18,7 +18,10 @@ Pull the last message sent by the user in the current chat. However, if the corr
 The last part `/g`, `/gi` etc. can be omitted, for which we may run into overflows. As a dirty hack, we add a `/` to the end of the string and then split it with `/`. This ensures that the string is splitted into at least 4 parts. Then, we build a `RegExp` out of it, and use it to correct the original message.
 
           sub = (msg.text + '/').split '/'
-          res = last.replace (new RegExp sub[1], sub[3]), sub[2]
+          res = try
+            last.replace (new RegExp sub[1], sub[3]), sub[2]
+          catch e
+            e
 
           @telegram.sendMessage
             chat_id: msg.chat.id,
