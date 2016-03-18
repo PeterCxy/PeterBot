@@ -44,7 +44,8 @@ It returns the length of the keys too.
 
 We sometimes need to convert a node-style callback method to an Rx style streaming method. This dirty work is done here.
 
-    exports.fromCallback = (func) ->
+    exports.fromCallback = (func, errFirst) ->
+      errFirst = false if !errFirst?
 
 Let's return a new function, in which we will register a callback wrapper and call the original function.
 
@@ -59,16 +60,26 @@ Node-style callbacks are always the last argument of the function. So, we just a
 
           a.push ->
 
-If an error occurs, we throw it first. In this case, the `Error` should be the `cancel` event, as `server.cleanup` function sends an `Error` to the callback that is about to be cancelled. See the `cleanup` function for details.
+Cancel if we have received a `cancel` event.
 
-            if arguments[0] instanceof Error
+            if arguments[0] instanceof Error and arguments[0].message is 'cancelled'
+              console.log 'Cancel event received.'
               throw arguments[0]
+
+If the first argument should be an error.
+
+            if errFirst
+              if arguments[0]?
+                observer.error arguments[0]
+              else
+                observer.next (args arguments)[1...]...
 
 Otherwise, we emit the result.
 
             else
               observer.next (args arguments)...
-              observer.complete()
+
+            observer.complete()
 
 Now we have created the callback wrapper. We can now call the original function with the arguments and the callback wrapper.
 

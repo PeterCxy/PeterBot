@@ -1,12 +1,9 @@
 A simple Google search module
+This module depends on the `googler-coffee` module
 
-    {exec} = require 'child_process'
-
-This module depends on the `googler` script.
-Please download it from <https://github.com/jarun/googler>,
-and point the `googler` field in `config.json` to it.
-
-    {googler} = require '../../config.json'
+    Rx = require 'rxjs/Rx'
+    googler = require '../utility'
+      .fromCallback require('googler-coffee').google, yes
     module.exports = require('../builder').build
 
 Google
@@ -36,32 +33,39 @@ When called with no arguments, we try to continue the last query.
         @put msg.chat.id, msg.from.id, 'query', query
         @put msg.chat.id, msg.from.id, 'start', start
 
-Now that we have got everything needed. We can spawn `googler` and do the search.
-`googler` cannot work correctly when Google automatically redirects to contry-specific domains.
-So let's specify an English-speaking country.
+Now that we have got everything needed. We can start the search now.
+We prefer English results. And the auto-correction is never needed.
 
-We do not need autocorrection either. The `-x` turns it off.
+Each time, we only fetch one result. Do not send long messages!
 
-        exec "#{googler} -C -x -c uk -n 1 -s #{start} #{query} < /dev/null", (err, stdout) =>
-          throw err if err?
-
-There is always a trailing line. We just replace it with nothing.
-
-          res = stdout.replace 'Enter n, p, result number or new keywords:', ''
-          res = "('・ω・') Nothing could be found." if res.trim() is ''
-
-We can now send the result back to the user.
-
-          @telegram.sendChatAction
+        @telegram.sendChatAction
+          chat_id: msg.chat.id
+          action: 'typing'
+        .flatMap ->
+          googler
+            query: query
+            start: start
+            num: 1
+            lang: 'en'
+            exact: yes
+            tld: 'co.uk'
+        .map (it) ->
+          if it.length > 0
+            it[0]
+          else
+            "('・ω・') Nothing could be found"
+        .map (it) ->
+          if it.title?
+            "#{it.title}\n#{it.url}\n\n#{it.content}"
+          else
+            it
+        .flatMap (it) =>
+          @telegram.sendMessage
             chat_id: msg.chat.id
-            action: 'typing'
-          .flatMap (it) =>
-            @telegram.sendMessage
-              chat_id: msg.chat.id
-              text: res
-              reply_to_message_id: msg.message_id
-          .subscribe null, (err) ->
-            console.log err
+            text: it
+            reply_to_message_id: msg.message_id
+        .subscribe null, (err) ->
+          console.log err
 
 Help
 ---

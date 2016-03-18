@@ -22,6 +22,7 @@
   },
   "dependencies": {
     "crc": "^3.4.0",
+    "googler-coffee": "^1.0.3",
     "mathjs": "^2.7.0",
     "parse-duration": "^0.1.1",
     "printf": "^0.2.3",
