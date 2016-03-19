@@ -2,7 +2,9 @@ Everybody may run into typos. This module provides __sed-like__ syntax to correc
 
 To make this actually work, this module must be registered as a generic processor.
 
-    module.exports = require('../builder').build
+    Module = require '../module'
+
+    module.exports = class Correction extends Module
       generic: (msg) ->
 
 If a message is something like `s/a/b(/g)`, it is considered a mark to correct the user's last message.

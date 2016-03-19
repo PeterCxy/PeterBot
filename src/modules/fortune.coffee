@@ -1,9 +1,10 @@
 # Programmers' fortune teller!
 # This module is mostly a copy of (http://runjs.cn/code/ydp3it7b), so I do not want to convert it into Literate Coffee.
+Module = require '../module'
 {format} = require 'util'
 {crc8} = require 'crc'
 
-module.exports = require('../builder').build
+module.exports = class Fortune extends Module
   today: (msg, args...) ->
     if args? and args.length > 0
       @whatif msg, args...

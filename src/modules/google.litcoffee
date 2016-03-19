@@ -2,9 +2,10 @@ A simple Google search module
 This module depends on the `googler-coffee` module
 
     Rx = require 'rxjs/Rx'
+    Module = require '../module'
     googler = require '../utility'
       .fromCallback require('googler-coffee').google, yes
-    module.exports = require('../builder').build
+    module.exports = class Google extends Module
 
 Google
 ---

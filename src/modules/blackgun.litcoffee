@@ -3,12 +3,13 @@ Blackgun is `黑枪` in Chinese. It refers to something irony but not that irony
 ## All the following content are only made for fun. DO NOT TAKE THEM SERIOUS.
 
     Rx = require 'rxjs/Rx'
+    Module = require '../module'
 
 Main
 ---
 The module is registered as a generic processor. It receive everything and detects if `Blackgun` is needed.
 
-    module.exports = require('../builder').build
+    module.exports = class BlackGun extends Module
       generic: (msg) ->
 
 Go through the conditions defined below, and try each condition on this message. If the condition function returns not `undefined` or returns true, it means that this `blackgun` is available for this message. We store the corresponding action temporarily.

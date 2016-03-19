@@ -1,7 +1,8 @@
 Welcome to the `help` module of the bot. As is mentioned in the `server` module, this is a special module which is not even located inside the `modules` directory. This module manages the help information of all the modules and present it to the user.
 
+    Module = require './module'
     module.exports = (commands) ->
-      require('./builder').build
+      class Help extends Module
 
 Help
 ---

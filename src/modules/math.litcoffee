@@ -1,10 +1,11 @@
 The `math` module acts like a convenient and powerful calculator in Telegram chats. This makes use of the npm module `math.js` to provide powerful math functionalities.
 
     Rx = require 'rxjs/Rx'
+    Module = require '../module'
     math = require 'mathjs'
     {check} = require '../utility'
 
-    module.exports = require('../builder').build
+    module.exports = class Math extends Module
 
 Calc
 ---

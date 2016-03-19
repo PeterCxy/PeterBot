@@ -1,10 +1,11 @@
 The `Hello, world` and misc module for the bot.
 
     Rx = require 'rxjs/Rx'
+    Module = require '../module'
     printf = require 'printf'
     {grabOnce, release, cleanup} = require '../server'
 
-    module.exports = require('../builder').build
+    module.exports = class Hello extends Module
 
 Hello
 ---
