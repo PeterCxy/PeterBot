@@ -4,7 +4,7 @@ Module = require '../module'
 {format} = require 'util'
 {crc8} = require 'crc'
 
-module.exports = class Fortune extends Module
+module.exports = class FortuneTeller extends Module
   today: (msg, args...) ->
     if args? and args.length > 0
       @whatif msg, args...
