@@ -6,6 +6,9 @@ This module depends on the `googler-coffee` module
     googler = require '../utility'
       .fromCallback require('googler-coffee').google, yes
     module.exports = class Google extends Module
+      constructor: ->
+        @save = true
+        super
 
 Google
 ---

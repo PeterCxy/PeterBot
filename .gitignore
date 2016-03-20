@@ -3,3 +3,5 @@ config.json
 lib
 *.log
 *.swp
+data/*
+!data/README.md
