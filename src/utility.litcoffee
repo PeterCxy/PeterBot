@@ -72,12 +72,12 @@ If the first argument should be an error.
               if arguments[0]?
                 observer.error arguments[0]
               else
-                observer.next (args arguments)[1...]...
+                (args arguments)[1...].map (it) -> observer.next it
 
 Otherwise, we emit the result.
 
             else
-              observer.next (args arguments)...
+              (args arguments).map (it) -> observer.next it
 
             observer.complete()
 
