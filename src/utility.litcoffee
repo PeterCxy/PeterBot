@@ -96,6 +96,7 @@ As is described in the `server` module, when an argument of a command contains s
 
     exports.parse = (args) ->
       ret = []
+      s = ''
 
 The `arr` array is a temporary storage where a list of arguments wrapped with `'` is stored.
 
@@ -103,21 +104,23 @@ The `arr` array is a temporary storage where a list of arguments wrapped with `'
       Rx.Observable.from args
         .flatMap (i) ->
 
-If the temporary storage is empty and this argument starts with `'`, it must be the start of an argument which contains spaces.
+If the temporary storage is empty and this argument starts with a quote, it must be the start of an argument which contains spaces.
 
-          if i.startsWith("'") and arr.length is 0
+          if ((i.startsWith "'") or (i.startsWith '"')) and arr.length is 0
+            s = i[0]
             arr.push i[1..]
 
 If so, we will omit this arguemnt itself. We wait until the end of the argument.
 
             Rx.Observable.from []
 
-If this argument ends with `'` and the storage is not empty, it must be the end of an arguemnt which contains spaces. In this case, we rebuild the arguemnt from the temporary storage, add them as one arguemnt to the result list, and then clear the storage.
+If this argument ends with a matching quote and the storage is not empty, it must be the end of an arguemnt which contains spaces. In this case, we rebuild the arguemnt from the temporary storage, add them as one arguemnt to the result list, and then clear the storage.
 
-          else if i[i.length - 1] is "'" and arr.length > 0
+          else if i[i.length - 1] is s and arr.length > 0
             arr.push i[..-2]
             str = arr.join ' '
             arr = []
+            s = ''
             Rx.Observable.of str
 
 If the storage is not empty and there's no special marks in this arguemnt, it must be in the body of an argument which contains spaces. We push it to the storage and wait for the end.
