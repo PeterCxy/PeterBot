@@ -21,10 +21,14 @@ A normal module's help information is stored in its `help` property which is a {
           if cmd is 'help'
             str = '''
     /help [command]
-    Get help for [command]
+    Get help for [command].
     '''
           else if commands[cmd]?
             str = commands[cmd].help[cmd]
+
+Inform users of the alternative prefix.
+
+          str += "\n\n*This bot accepts commands prefixed with `/` or `!`.*"
 
 Then we just send the help information to the user.
 

@@ -179,8 +179,9 @@ By default, a command's arguments are seperated with spaces, so we split the tex
           list = text.split ' '
 
 According to the Telegram rules, messages starting with `/` are considered commands of bots.
+But in super groups, bots may not receive commands that are not tagged with bot's name. So we use an alternative prefix `!`.
 
-          if list[0].startsWith '/'
+          if (list[0].startsWith '/') or (list[0].startsWith '!')
             cmd = list[0][1...]
 
 In some cases, multiple bots will consume commands of the same name. If so, conflicts are possible. So a command may point out the bot that is responsible to consume this command. e.g. `/help@PeterCxyBot`
